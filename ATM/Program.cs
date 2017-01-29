@@ -16,8 +16,27 @@ namespace ATM
         {
             using (var db = new ATMContext())
             {
-                LoginorSignUp(db);
-                return;
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("1) Login");
+                    Console.WriteLine("2) Create an Account");
+                    int choice = int.Parse(Read("> "));
+
+                    switch (choice)
+                    {
+                        case 1:
+                            UserLogin(db);
+                            AccountManagement(db);
+                            break;
+                        case 2:
+                            NewUser(db);
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
             }
 
 
@@ -29,9 +48,10 @@ namespace ATM
             while (logCK)
             {
                 Console.Clear();
+                Console.WriteLine($"Your Current Balance: {balanceInfo.Balance}");
                 Console.WriteLine("1) Make a Withdraw");
                 Console.WriteLine("2) Deposit Money");
-                Console.WriteLine("2) Logout");
+                Console.WriteLine("3) Logout");
                 int choice = int.Parse(Read("> "));
 
                 switch (choice)
@@ -52,36 +72,10 @@ namespace ATM
 
         }
 
-        private static void LoginorSignUp(ATMContext db)
-        {
-            //LoginorSignUp(db);
-            //return;
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine("1) Login");
-                Console.WriteLine("2) Create an Account");
-                int choice = int.Parse(Read("> "));
-
-                switch (choice)
-                {
-                    case 1:
-                        UserLogin(db);
-                        AccountManagement(db);
-                        break;
-                    case 2:
-                        NewUser(db);
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        }
+        
 
         private static void Deposit(ATMContext db)
         {   //Deposit(db);
-            UserLogin(db);
             double balance = balanceInfo.Balance;
             var deposit = Read("How much would you like to Deposit? Enter a number.");
             double depositAmount = int.Parse(deposit);
