@@ -16,6 +16,7 @@ namespace ATM
         {
             using (var db = new ATMContext())
             {
+               
                 while (true)
                 {
                     Console.Clear();
@@ -31,6 +32,7 @@ namespace ATM
                             break;
                         case 2:
                             NewUser(db);
+                            AccountCreation(db);
                             break;
 
                         default:
@@ -40,6 +42,20 @@ namespace ATM
             }
 
 
+        }
+
+        private static void AccountCreation(ATMContext db)
+        {
+            AccountInfo accountInfo = new AccountInfo
+            {
+                Balance = 0,
+                Withdraw = 0,
+                Deposit = 0,
+                DateTime = DateTime.Now,
+                UserInfo = userInstance,
+            };
+            db.AccountInfo.Add(accountInfo);
+            db.SaveChanges();
         }
 
         private static void AccountManagement(ATMContext db)
@@ -103,6 +119,7 @@ namespace ATM
                 Balance = newBalance,
                 Withdraw = withdrawAmount,
                 UserInfo = userInstance,
+                DateTime = DateTime.Now,
             };
             db.AccountInfo.Add(accountInfo);
             db.SaveChanges();
@@ -126,14 +143,7 @@ namespace ATM
                 {
                     Console.WriteLine("Login Successfull");
                     userInstance = db.UserInfo.Where(x => x.Username == userName).First();
-                    var userId = userInstance.Id;
                     balanceInfo = db.AccountInfo.Where(y => y.UserInfo.Id == userInstance.Id).OrderByDescending(x => x.Id).First();
-                    
-                    
-                   
-      
-                    
-
                     //balanceinfo.Balance;
                     break;
                 }
@@ -153,17 +163,19 @@ namespace ATM
             var userName = Read("Enter a new username");
             var password = Read("Enter a password");
             var joinDate = DateTime.Now;
-           
-            //var userInstance = db.UserInfo.Where(u => u.Username == userName).First();
+            
 
             UserInfo userInfo = new UserInfo
             {
                 Username = userName,
                 Password = password,
                 JoinDateTime = joinDate,
+
             };
             db.UserInfo.Add(userInfo);
-            db.SaveChanges();            
+            db.SaveChanges();
+            userInstance = db.UserInfo.Where(x => x.Username == userName).First();
+
         }
     }
 }
