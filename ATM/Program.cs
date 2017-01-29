@@ -148,7 +148,8 @@ namespace ATM
             double balance = balanceInfo.Balance;
             var deposit = Read("How much would you like to Deposit? : ");
             double depositAmount = int.Parse(deposit);
-            double newBalance = depositAmount + balance;
+            double newBalance;
+            newBalance = depositAmount + balance;
             AccountInfo accountInfo = new AccountInfo
             {
                 Balance = newBalance,
@@ -168,7 +169,17 @@ namespace ATM
             double balance = balanceInfo.Balance;
             var withdraw = Read("How much would you like to withdraw? : ");
             double withdrawAmount = int.Parse(withdraw);
-            double newBalance = balance - withdrawAmount;
+            double newBalance;
+            if (withdrawAmount > balance)
+            {
+                Console.WriteLine("You overdrew your account. You will be charged a $15 fee.");
+                newBalance = balance - 15;
+                newBalance = newBalance - withdrawAmount;
+            }
+            else
+            {
+                newBalance = balance - withdrawAmount;
+            }
             AccountInfo accountInfo = new AccountInfo
             {
                 Balance = newBalance,
