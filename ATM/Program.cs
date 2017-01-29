@@ -72,8 +72,6 @@ namespace ATM
 
         }
 
-        
-
         private static void Deposit(ATMContext db)
         {   //Deposit(db);
             double balance = balanceInfo.Balance;
@@ -84,6 +82,7 @@ namespace ATM
             {
                 Balance = newBalance,
                 Deposit = depositAmount,
+                UserInfo = userInstance,
             };
             db.AccountInfo.Add(accountInfo);
             db.SaveChanges();
@@ -102,6 +101,7 @@ namespace ATM
             {
                 Balance = newBalance,
                 Withdraw = withdrawAmount,
+                UserInfo = userInstance,
             };
             db.AccountInfo.Add(accountInfo);
             db.SaveChanges();
@@ -126,7 +126,7 @@ namespace ATM
                     Console.WriteLine("Login Successfull");
                     userInstance = db.UserInfo.Where(x => x.Username == userName).First();
                     var userId = userInstance.Id;
-                    balanceInfo = db.AccountInfo.Where(x => x.Id == userId).First();
+                    balanceInfo = db.AccountInfo.Where(x => x.Id == userId).Last();
                     //balanceinfo.Balance;
                     break;
                 }

@@ -84,6 +84,14 @@
     <Compile Include="Migrations\201701272007222_RemovedAccountManagement.Designer.cs">
       <DependentUpon>201701272007222_RemovedAccountManagement.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701290021550_FixedUINeed.cs" />
+    <Compile Include="Migrations\201701290021550_FixedUINeed.Designer.cs">
+      <DependentUpon>201701290021550_FixedUINeed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701290055450_AddedaSaveForUserInfoId.cs" />
+    <Compile Include="Migrations\201701290055450_AddedaSaveForUserInfoId.Designer.cs">
+      <DependentUpon>201701290055450_AddedaSaveForUserInfoId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ATMContext.cs" />
     <Compile Include="Migrations\201701261911148_AddedATMAccountandUserInfoInitial.cs" />
     <Compile Include="Migrations\201701261911148_AddedATMAccountandUserInfoInitial.Designer.cs">
@@ -133,6 +141,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701272007222_RemovedAccountManagement.resx">
       <DependentUpon>201701272007222_RemovedAccountManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701290021550_FixedUINeed.resx">
+      <DependentUpon>201701290021550_FixedUINeed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701290055450_AddedaSaveForUserInfoId.resx">
+      <DependentUpon>201701290055450_AddedaSaveForUserInfoId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
