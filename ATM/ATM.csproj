@@ -100,6 +100,10 @@
     <Compile Include="Migrations\201701290700005_ChangedUserInfoInAccInfoToVirtual.Designer.cs">
       <DependentUpon>201701290700005_ChangedUserInfoInAccInfoToVirtual.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701290718189_RemoedUserInfoVirtual.cs" />
+    <Compile Include="Migrations\201701290718189_RemoedUserInfoVirtual.Designer.cs">
+      <DependentUpon>201701290718189_RemoedUserInfoVirtual.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ATMContext.cs" />
     <Compile Include="Migrations\201701261911148_AddedATMAccountandUserInfoInitial.cs" />
     <Compile Include="Migrations\201701261911148_AddedATMAccountandUserInfoInitial.Designer.cs">
@@ -161,6 +165,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701290700005_ChangedUserInfoInAccInfoToVirtual.resx">
       <DependentUpon>201701290700005_ChangedUserInfoInAccInfoToVirtual.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701290718189_RemoedUserInfoVirtual.resx">
+      <DependentUpon>201701290718189_RemoedUserInfoVirtual.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

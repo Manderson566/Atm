@@ -13,7 +13,7 @@ namespace ATM
         public double Withdraw { get; set; }
         public double Deposit { get; set; }
         public DateTime DateTime { get; set; }
-        public virtual UserInfo UserInfo { get; set; }
+        public UserInfo UserInfo { get; set; }
 
 
 
