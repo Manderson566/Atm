@@ -48,6 +48,7 @@ namespace ATM
             while (logCK)
             {
                 Console.Clear();
+                Console.WriteLine();
                 Console.WriteLine($"Your Current Balance: {balanceInfo.Balance}");
                 Console.WriteLine("1) Make a Withdraw");
                 Console.WriteLine("2) Deposit Money");
@@ -96,7 +97,7 @@ namespace ATM
             double balance = balanceInfo.Balance;
             var withdraw = Read("How much would you like to withdraw? Enter a number.");
             double withdrawAmount = int.Parse(withdraw);
-            double newBalance = withdrawAmount - balance;
+            double newBalance = balance - withdrawAmount;
             AccountInfo accountInfo = new AccountInfo
             {
                 Balance = newBalance,
@@ -126,7 +127,13 @@ namespace ATM
                     Console.WriteLine("Login Successfull");
                     userInstance = db.UserInfo.Where(x => x.Username == userName).First();
                     var userId = userInstance.Id;
-                    balanceInfo = db.AccountInfo.Where(x => x.Id == userId).Last();
+                    balanceInfo = db.AccountInfo.Where(y => y.UserInfo.Id == userInstance.Id).OrderByDescending(x => x.Id).First();
+                    
+                    
+                   
+      
+                    
+
                     //balanceinfo.Balance;
                     break;
                 }
