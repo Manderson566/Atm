@@ -47,15 +47,49 @@ namespace ATM
             }
         }
 
-        private static void CkBalance(ATMContext db)
+        private static void AccountActivity(ATMContext db)
         {
-            Console.WriteLine($"Your Current Balance: {balanceInfo.Balance}");
-            var allWithdrawInfo = db.AccountInfo.Where(y => y.UserInfo.Id == userInstance.Id);
-            foreach (var withdraw in allWithdrawInfo)
+            bool logCK = true;
+            while (logCK)
             {
-                Console.WriteLine(withdraw);
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("1) Check Balance");
+                Console.WriteLine("2) Withdraw Activity");
+                Console.WriteLine("3) Deposit Activity");
+                Console.WriteLine("4) Back");
+                int choice = int.Parse(Read("> "));
+
+                switch (choice)
+                {
+                    case 1:
+                        Console.WriteLine($"Your Current Balance: ${balanceInfo.Balance}");
+                        Pause();
+                        break;
+                    case 2:
+                        var allWithdrawInfo = db.AccountInfo.Where(y => y.UserInfo.Id == userInstance.Id);
+                        foreach (var withdraw in allWithdrawInfo)
+                        {
+                            Console.WriteLine($"You Withdrew: ${withdraw.Withdraw} On   {withdraw.DateTime }");
+                        }
+                        Pause();
+                        break;
+                    case 3:
+                        var allDepositInfo = db.AccountInfo.Where(y => y.UserInfo.Id == userInstance.Id);
+                        foreach (var Deposit in allDepositInfo)
+                        {
+                            Console.WriteLine($"You Deposited: ${Deposit.Deposit} On   {Deposit.DateTime }");
+                        }
+                        Pause();
+                        break;
+                    case 4:
+                        logCK = false;
+                        break;
+                    default:
+                        break;
+                }
             }
-            Pause();
+            
 
 
         }
@@ -83,7 +117,7 @@ namespace ATM
                 Console.WriteLine();
                 Console.WriteLine("1) Make a Withdraw");
                 Console.WriteLine("2) Deposit Money");
-                Console.WriteLine("3) Check Balance");
+                Console.WriteLine("3) Account Activity");
                 Console.WriteLine("4) Logout");
                 int choice = int.Parse(Read("> "));
 
@@ -99,7 +133,7 @@ namespace ATM
                         break;
                     case 3:
                         UserLogin(db);
-                        CkBalance(db);
+                        AccountActivity(db);
                         break;
                     case 4:
                         logCK = false;
@@ -108,9 +142,7 @@ namespace ATM
                         break;
                 }
             }
-
         }
-
         private static void Deposit(ATMContext db)
         {   //Deposit(db);
             double balance = balanceInfo.Balance;
@@ -126,7 +158,7 @@ namespace ATM
             };
             db.AccountInfo.Add(accountInfo);
             db.SaveChanges();
-            Console.WriteLine($" Your new account balance is {newBalance}");
+            Console.WriteLine($" Your new account balance is ${newBalance}");
         }
 
         private static void Withdraw(ATMContext db)
@@ -146,7 +178,7 @@ namespace ATM
             };
             db.AccountInfo.Add(accountInfo);
             db.SaveChanges();
-            Console.WriteLine($" Your new account balance is {newBalance}");
+            Console.WriteLine($" Your new account balance is ${newBalance}");
         }
         private static void UserLogin(ATMContext db)
         {  //UserLogin(db);
@@ -157,8 +189,8 @@ namespace ATM
                     Console.WriteLine("Too many attempts. Please try again Later");
                     Environment.Exit(0);
                 }
-                var userName = Read("Enter your username");
-                var password = Read("Enter your password");
+                var userName = Read("Enter your username: ");
+                var password = Read("Enter your password: ");
                 bool userNameTrue = db.UserInfo.Any(u => u.Username == (userName));
                 bool pwTrue = db.UserInfo.Any(u => u.Password == (password));
                 if (userNameTrue && pwTrue)
