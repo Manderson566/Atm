@@ -10,7 +10,7 @@ namespace ATM
         static AccountInfo balanceInfo;
         static string Read(string input)
         {
-            Console.Write(input);
+            Console.Write(input.ToUpper());
             return Console.ReadLine();
         }
         static string Pause()
@@ -223,17 +223,21 @@ namespace ATM
         }
         private static void NewUser(ATMContext db)
         { // NewUser(db);
-
-            var userName = Read("Enter a new username");
-            var password = Read("Enter a password");
-            var joinDate = DateTime.Now;
             
-
+            var userName = Read("Enter a new username");
+            bool userNameTrue = db.UserInfo.Any(u => u.Username == (userName));
+                while (userNameTrue == true)
+                {
+                    Console.WriteLine("That Username is already taken.");
+                    userName = Read("Enter a new username");
+                    userNameTrue = db.UserInfo.Any(u => u.Username == (userName));
+            }                    
+            var password = Read("Enter a password");
             UserInfo userInfo = new UserInfo
             {
                 Username = userName,
                 Password = password,
-                JoinDateTime = joinDate,
+                JoinDateTime = DateTime.Now,
 
             };
             db.UserInfo.Add(userInfo);
