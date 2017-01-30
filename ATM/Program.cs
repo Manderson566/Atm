@@ -133,7 +133,7 @@ namespace ATM
             }
         }
         private static void Deposit(ATMContext db)
-        {   //Deposit(db);
+        {  
             userInstance = db.UserInfo.Where(x => x.Username == userName).First();
             balanceInfo = db.AccountInfo.Where(y => y.UserInfo.Id == userInstance.Id).OrderByDescending(x => x.Id).First();
             double balance = balanceInfo.Balance;
@@ -154,7 +154,6 @@ namespace ATM
         }
         private static void Withdraw(ATMContext db)
         {
-            //Withdraw(db);
             userInstance = db.UserInfo.Where(x => x.Username == userName).First();
             balanceInfo = db.AccountInfo.Where(y => y.UserInfo.Id == userInstance.Id).OrderByDescending(x => x.Id).First();
             double balance = balanceInfo.Balance;
@@ -237,7 +236,7 @@ namespace ATM
             Pause();
         }
         private static void UserLogin(ATMContext db)
-        {  //UserLogin(db);
+        {  
             for (int i = 0; i < 6; i++)
             {
                 if (i > 4)
@@ -264,7 +263,7 @@ namespace ATM
             }                
         }
         private static void NewUser(ATMContext db)
-        { // NewUser(db);
+        { 
             
             var userName = Read("Enter a new username: ");
             bool userNameTrue = db.UserInfo.Any(u => u.Username == (userName));
