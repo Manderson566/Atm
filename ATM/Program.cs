@@ -246,8 +246,9 @@ namespace ATM
                 }
                     userName = Read("Enter your username: ");
                 var password = Read("Enter your password: ");
-                bool userNameTrue = db.UserInfo.Any(u => u.Username == (userName));
-                bool pwTrue = db.UserInfo.Any(u => u.Password == (password));
+                bool userNameTrue = db.UserInfo.Any(u => u.Username == userName);
+                userInstance = db.UserInfo.Where(x => x.Username == userName).First();
+                bool pwTrue = db.UserInfo.Any(u => userInstance.Password == password);               
                 if (userNameTrue && pwTrue)
                 {
                     Console.WriteLine("Login Successfull");
