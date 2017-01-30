@@ -6,6 +6,7 @@ namespace ATM
     class Program
     {
         static UserInfo userInstance;
+        static string userName;
         static UserInfo userInstanceNewAcc;
         static AccountInfo balanceInfo;
         static string Read(string input)
@@ -52,6 +53,8 @@ namespace ATM
             bool logCK = true;
             while (logCK)
             {
+                userInstance = db.UserInfo.Where(x => x.Username == userName).First();
+                balanceInfo = db.AccountInfo.Where(y => y.UserInfo.Id == userInstance.Id).OrderByDescending(x => x.Id).First();
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("1) Check Balance");
@@ -88,12 +91,8 @@ namespace ATM
                     default:
                         break;
                 }
-            }
-            
-
-
+            }            
         }
-
         private static void AccountCreation(ATMContext db)
         {
             AccountInfo accountInfo = new AccountInfo
@@ -124,15 +123,16 @@ namespace ATM
                 switch (choice)
                 {
                     case 1:
+                        
                         Withdraw(db);
                         Pause();
                         break;
                     case 2:
+                        
                         Deposit(db);
                         Pause();
                         break;
                     case 3:
-                        UserLogin(db);
                         AccountActivity(db);
                         break;
                     case 4:
@@ -145,6 +145,8 @@ namespace ATM
         }
         private static void Deposit(ATMContext db)
         {   //Deposit(db);
+            userInstance = db.UserInfo.Where(x => x.Username == userName).First();
+            balanceInfo = db.AccountInfo.Where(y => y.UserInfo.Id == userInstance.Id).OrderByDescending(x => x.Id).First();
             double balance = balanceInfo.Balance;
             var deposit = Read("How much would you like to Deposit? : ");
             double depositAmount = int.Parse(deposit);
@@ -164,8 +166,9 @@ namespace ATM
 
         private static void Withdraw(ATMContext db)
         {
-            
             //Withdraw(db);
+            userInstance = db.UserInfo.Where(x => x.Username == userName).First();
+            balanceInfo = db.AccountInfo.Where(y => y.UserInfo.Id == userInstance.Id).OrderByDescending(x => x.Id).First();
             double balance = balanceInfo.Balance;
             var withdraw = Read("How much would you like to withdraw? : ");
             double withdrawAmount = int.Parse(withdraw);
@@ -173,8 +176,8 @@ namespace ATM
             if (withdrawAmount > balance)
             {
                 Console.WriteLine("You overdrew your account. You will be charged a $15 fee.");
-                newBalance = balance - 15;
-                newBalance = newBalance - withdrawAmount;
+                double overdrawnBalance = withdrawAmount + 15;
+                newBalance = balance - overdrawnBalance;
             }
             else
             {
@@ -200,7 +203,7 @@ namespace ATM
                     Console.WriteLine("Too many attempts. Please try again Later");
                     Environment.Exit(0);
                 }
-                var userName = Read("Enter your username: ");
+                    userName = Read("Enter your username: ");
                 var password = Read("Enter your password: ");
                 bool userNameTrue = db.UserInfo.Any(u => u.Username == (userName));
                 bool pwTrue = db.UserInfo.Any(u => u.Password == (password));
@@ -215,11 +218,8 @@ namespace ATM
                 else
                 {
                     Console.WriteLine("Password or Username is incorrect please try again");
-
-                }
-                
-            }
-                
+                }                
+            }                
         }
         private static void NewUser(ATMContext db)
         { // NewUser(db);
@@ -238,12 +238,10 @@ namespace ATM
                 Username = userName,
                 Password = password,
                 JoinDateTime = DateTime.Now,
-
             };
             db.UserInfo.Add(userInfo);
             db.SaveChanges();
             userInstanceNewAcc = db.UserInfo.Where(x => x.Username == userName).First();
-
         }
     }
 }
