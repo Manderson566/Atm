@@ -14,8 +14,5 @@ namespace ATM
         public double Deposit { get; set; }
         public DateTime DateTime { get; set; }
         public UserInfo UserInfo { get; set; }
-
-
-
     }
 }

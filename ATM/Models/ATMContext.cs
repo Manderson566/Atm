@@ -11,7 +11,6 @@ namespace ATM
     {
         public int Id { get; set; }
         public DbSet<AccountInfo> AccountInfo { get; set; }
-        public DbSet<UserInfo> UserInfo { get; set; }
-        
+        public DbSet<UserInfo> UserInfo { get; set; }        
     }
 }

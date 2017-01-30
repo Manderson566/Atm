@@ -6,19 +6,21 @@ namespace ATM
     class Program
     {
         static UserInfo userInstance;
-        static string userName;
         static UserInfo userInstanceNewAcc;
         static AccountInfo balanceInfo;
+        static string userName;
         static string Read(string input)
         {
             Console.Write(input.ToUpper());
             return Console.ReadLine();
         }
+
         static string Pause()
         {           
             Console.WriteLine("Press Enter");
             return Console.ReadLine();
         }
+
         static void Main(string[] args)
         {
             using (var db = new ATMContext())
@@ -47,7 +49,6 @@ namespace ATM
                 }
             }
         }
-
         private static void AccountActivity(ATMContext db)
         {
             bool logCK = true;
@@ -93,20 +94,6 @@ namespace ATM
                 }
             }            
         }
-        private static void AccountCreation(ATMContext db)
-        {
-            AccountInfo accountInfo = new AccountInfo
-            {
-                Balance = 0,
-                Withdraw = 0,
-                Deposit = 0,
-                DateTime = DateTime.Now,
-                UserInfo = userInstanceNewAcc,
-            };
-            db.AccountInfo.Add(accountInfo);
-            db.SaveChanges();
-        }
-
         private static void AccountManagement(ATMContext db)
         {
             bool logCK = true;
@@ -117,18 +104,17 @@ namespace ATM
                 Console.WriteLine("1) Make a Withdraw");
                 Console.WriteLine("2) Deposit Money");
                 Console.WriteLine("3) Account Activity");
-                Console.WriteLine("4) Logout");
+                Console.WriteLine("4) Transfer Money");
+                Console.WriteLine("5) Logout");
                 int choice = int.Parse(Read("> "));
 
                 switch (choice)
                 {
-                    case 1:
-                        
+                    case 1:                       
                         Withdraw(db);
                         Pause();
                         break;
-                    case 2:
-                        
+                    case 2:                        
                         Deposit(db);
                         Pause();
                         break;
@@ -136,6 +122,9 @@ namespace ATM
                         AccountActivity(db);
                         break;
                     case 4:
+                        Transfer(db);
+                        break;
+                    case 5:
                         logCK = false;
                         break;
                     default:
@@ -163,7 +152,6 @@ namespace ATM
             db.SaveChanges();
             Console.WriteLine($" Your new account balance is ${newBalance}");
         }
-
         private static void Withdraw(ATMContext db)
         {
             //Withdraw(db);
@@ -193,6 +181,60 @@ namespace ATM
             db.AccountInfo.Add(accountInfo);
             db.SaveChanges();
             Console.WriteLine($" Your new account balance is ${newBalance}");
+        }
+        private static void Transfer(ATMContext db)
+        {
+            userName = Read("Enter the name of the account you would like to transfer to: ");
+            bool userNameTrue = db.UserInfo.Any(u => u.Username == (userName));
+            while (userNameTrue == false)
+            {
+                Console.WriteLine("That user does not exist.");
+                userName = Read("Enter the name of the account you would like to transfer to: ");
+                userNameTrue = db.UserInfo.Any(u => u.Username == (userName));
+            }
+            userInstance = db.UserInfo.Where(x => x.Username == userName).First();
+            balanceInfo = db.AccountInfo.Where(y => y.UserInfo.Id == userInstance.Id).OrderByDescending(x => x.Id).First();
+            double balanceTransfer = balanceInfo.Balance;
+            var deposit = Read("How much would you like to Transfer?: ");
+            double depositAmount = int.Parse(deposit);           
+            double newBalanceTransferTO = depositAmount + balanceTransfer;
+            AccountInfo accountInfo = new AccountInfo
+            {
+                Balance = newBalanceTransferTO,
+                Deposit = depositAmount,
+                UserInfo = userInstance,
+                DateTime = DateTime.Now,
+            };
+            db.AccountInfo.Add(accountInfo);
+            db.SaveChanges();
+
+            Console.WriteLine("Please verify your account information to make the transfer.");
+            UserLogin(db);
+            double balance = balanceInfo.Balance;
+            var withdraw = deposit;
+            double withdrawAmount = int.Parse(withdraw);
+            double newBalance;
+            if (withdrawAmount > balance)
+            {
+                Console.WriteLine("You overdrew your account. You will be charged a $15 fee.");
+                double overdrawnBalance = withdrawAmount + 15;
+                newBalance = balance - overdrawnBalance;
+            }
+            else
+            {
+                newBalance = balance - withdrawAmount;
+            }
+            AccountInfo accountInfo2 = new AccountInfo
+            {
+                Balance = newBalance,
+                Withdraw = withdrawAmount,
+                UserInfo = userInstance,
+                DateTime = DateTime.Now,
+            };
+            db.AccountInfo.Add(accountInfo2);
+            db.SaveChanges();
+            Console.WriteLine($" Your new account balance is ${newBalance}");
+            Pause();
         }
         private static void UserLogin(ATMContext db)
         {  //UserLogin(db);
@@ -224,15 +266,15 @@ namespace ATM
         private static void NewUser(ATMContext db)
         { // NewUser(db);
             
-            var userName = Read("Enter a new username");
+            var userName = Read("Enter a new username: ");
             bool userNameTrue = db.UserInfo.Any(u => u.Username == (userName));
                 while (userNameTrue == true)
                 {
                     Console.WriteLine("That Username is already taken.");
-                    userName = Read("Enter a new username");
+                    userName = Read("Enter a new username: ");
                     userNameTrue = db.UserInfo.Any(u => u.Username == (userName));
             }                    
-            var password = Read("Enter a password");
+            var password = Read("Enter a password: ");
             UserInfo userInfo = new UserInfo
             {
                 Username = userName,
@@ -242,6 +284,19 @@ namespace ATM
             db.UserInfo.Add(userInfo);
             db.SaveChanges();
             userInstanceNewAcc = db.UserInfo.Where(x => x.Username == userName).First();
+        }
+        private static void AccountCreation(ATMContext db)
+        {
+            AccountInfo accountInfo = new AccountInfo
+            {
+                Balance = 0,
+                Withdraw = 0,
+                Deposit = 0,
+                DateTime = DateTime.Now,
+                UserInfo = userInstanceNewAcc,
+            };
+            db.AccountInfo.Add(accountInfo);
+            db.SaveChanges();
         }
     }
 }
